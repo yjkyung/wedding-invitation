@@ -1,5 +1,7 @@
 # 모바일 청첩장 템플릿 | Wedding Invitation Template
 
+## 윤진 / 정윤네 버전 수정
+
 ## 원본 버전 | Original Version
 
 남주호 ❤️ 정지원 청첩장입니다.
