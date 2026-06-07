@@ -1,0 +1,36 @@
+.bgm-button {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: var(--theme-color);
+  color: var(--white-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  cursor: pointer;
+
+  &:hover,
+  &.playing {
+    opacity: 1;
+  }
+
+  svg {
+    animation: none;
+  }
+
+  &.playing svg {
+    animation: spin 4s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+}

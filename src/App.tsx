@@ -8,6 +8,7 @@ import { Gallery } from "./component/gallery"
 import { Information } from "./component/information"
 import { LazyDiv } from "./component/lazyDiv"
 import { ShareButton } from "./component/shareButton"
+import { BGM } from "./component/bgm"
 
 /**
  * 메인 애플리케이션 컴포넌트입니다.
@@ -20,6 +21,7 @@ function App() {
     <div className="background">
       {/* 배경 애니메이션 효과 (예: 꽃잎 내리기) */}
       <BGEffect />
+      <BGM />
       <div className="card-view">
         <LazyDiv className="card-group">
           {/* 메인 커버 섹션 */}
