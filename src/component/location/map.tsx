@@ -106,7 +106,7 @@ const NaverMap = () => {
           >
             {showLockMessage && (
               <div className="lock-message">
-                <LockIcon /> 자물쇠 버튼을 눌러
+                <LockIcon /> 좌측 상단 자물쇠 버튼을 눌러
                 <br />
                 터치 잠금 해제 후 확대 및 이동해 주세요.
               </div>
