@@ -277,17 +277,6 @@ export const Gallery = () => {
     }
   }, [onMouseMove, onTouchMove, onMouseTouchUp])
 
-  /**
-   * 인디케이터 클릭 시 해당 슬라이드로 이동
-   */
-  const onIndicatorClick = useCallback(
-    (status: Status, srcIdx: number, dstIdx: number) => {
-      if (status !== "stationary" || srcIdx === dstIdx) return
-      move(srcIdx, dstIdx)
-    },
-    [move],
-  )
-
   const transformStyle = useMemo(() => {
     switch (status) {
       case "dragging":
@@ -381,19 +370,6 @@ export const Gallery = () => {
                 <ArrowLeft className="arrow right" />
               </div>
             </div>
-          </div>
-
-          {/* 하단 인디케이터 (점) */}
-          <div className="carousel-indicator">
-            {CAROUSEL_ITEMS.map((_, idx) => (
-              <button
-                key={idx}
-                className={`indicator${idx === slide ? " active" : ""}`}
-                onClick={() =>
-                  onIndicatorClick(statusRef.current, slideRef.current, idx)
-                }
-              />
-            ))}
           </div>
         </div>
 
