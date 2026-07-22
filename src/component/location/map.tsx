@@ -7,11 +7,12 @@ import LockIcon from "../../icons/lock-icon.svg?react"
 import UnlockIcon from "../../icons/unlock-icon.svg?react"
 import {
   KMAP_PLACE_ID,
-  LOCATION,
+  LOCALIZED,
   NMAP_PLACE_ID,
   WEDDING_HALL_POSITION,
 } from "../../const"
 import { NAVER_MAP_CLIENT_ID } from "../../env"
+import { useTranslation } from "../../language"
 
 /**
  * 지도를 표시하고 길찾기 앱(네이버, 카카오, 티맵) 연동 기능을 제공하는 컴포넌트입니다.
@@ -29,6 +30,8 @@ export const Map = () => {
 const NaverMap = () => {
   const naver = useNaver()
   const kakao = useKakao()
+  const { t, language } = useTranslation()
+  const { location } = LOCALIZED[language]
   const ref = useRef<HTMLDivElement>(null)
 
   // 모바일에서 스크롤 중 지도가 조작되는 것을 방지하기 위한 잠금 상태
@@ -106,9 +109,7 @@ const NaverMap = () => {
           >
             {showLockMessage && (
               <div className="lock-message">
-                <LockIcon /> 좌측 상단 자물쇠 버튼을 눌러
-                <br />
-                터치 잠금 해제 후 확대 및 이동해 주세요.
+                <LockIcon /> {t.location.lockMessage}
               </div>
             )}
           </div>
@@ -152,7 +153,7 @@ const NaverMap = () => {
           }}
         >
           <img src={nmapIcon} alt="naver-map-icon" />
-          네이버 지도
+          {t.location.naverMap}
         </button>
 
         {/* 카카오 내비 연동 */}
@@ -163,7 +164,7 @@ const NaverMap = () => {
               case "android":
                 if (kakao)
                   kakao.Navi.start({
-                    name: LOCATION,
+                    name: location,
                     x: WEDDING_HALL_POSITION[0],
                     y: WEDDING_HALL_POSITION[1],
                     coordType: "wgs84",
@@ -179,7 +180,7 @@ const NaverMap = () => {
           }}
         >
           <img src={knaviIcon} alt="kakao-navi-icon" />
-          카카오 내비
+          {t.location.kakaoNavi}
         </button>
 
         {/* 티맵 연동 */}
@@ -191,20 +192,20 @@ const NaverMap = () => {
                 const params = new URLSearchParams({
                   goalx: WEDDING_HALL_POSITION[0].toString(),
                   goaly: WEDDING_HALL_POSITION[1].toString(),
-                  goalName: LOCATION,
+                  goalName: location,
                 })
                 window.open(`tmap://route?${params.toString()}`, "_self")
                 break
               }
               default: {
-                alert("모바일에서 확인하실 수 있습니다.")
+                alert(t.location.mobileOnlyAlert)
                 break
               }
             }
           }}
         >
           <img src={tmapIcon} alt="t-map-icon" />
-          티맵
+          {t.location.tmap}
         </button>
       </div>
     </>

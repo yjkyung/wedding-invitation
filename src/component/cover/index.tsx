@@ -1,12 +1,8 @@
-import {
-  BRIDE_FULLNAME,
-  GROOM_FULLNAME,
-  LOCATION,
-  WEDDING_DATE,
-  WEDDING_DATE_FORMAT,
-} from "../../const"
+import { formatWeddingDate, LOCALIZED, WEDDING_DATE } from "../../const"
 import { COVER_IMAGE } from "../../images"
 import { LazyDiv } from "../lazyDiv"
+import { LanguageToggle } from "../languageToggle"
+import { useLanguage } from "../../language"
 
 const DAY_OF_WEEK = [
   "Sunday",
@@ -25,8 +21,14 @@ const DAY_OF_WEEK = [
  * @returns {JSX.Element} 커버 섹션
  */
 export const Cover = () => {
+  const { language } = useLanguage()
+  const { groomFullname, brideFullname, location } = LOCALIZED[language]
+
   return (
     <LazyDiv className="card cover">
+      {/* 한/영 전환 버튼 */}
+      <LanguageToggle />
+
       {/* 상단 날짜 표시 */}
       <div className="wedding-date">
         {WEDDING_DATE.format("YYYY")}
@@ -46,13 +48,13 @@ export const Cover = () => {
       <div className="subtitle">Save the date for the wedding of</div>
       {/* 이름 표시 */}
       <div className="names">
-        {GROOM_FULLNAME}
+        {groomFullname}
         <div className="divider" />
-        {BRIDE_FULLNAME}
+        {brideFullname}
       </div>
       {/* 예식 정보 (포맷팅된 날짜 및 장소) */}
-      <div className="info">{WEDDING_DATE.format(WEDDING_DATE_FORMAT)}</div>
-      <div className="info">{LOCATION}</div>
+      <div className="info">{formatWeddingDate(language)}</div>
+      <div className="info">{location}</div>
     </LazyDiv>
   )
 }

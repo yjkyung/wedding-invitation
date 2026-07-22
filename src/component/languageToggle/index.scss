@@ -1,0 +1,32 @@
+.language-toggle {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(2px);
+
+  button {
+    font-size: 0.7rem;
+    letter-spacing: 0.03em;
+    opacity: 0.5;
+    padding: 0.1rem 0.2rem;
+
+    &.active {
+      opacity: 1;
+      color: var(--theme-color);
+    }
+  }
+
+  .divider {
+    width: 1px;
+    height: 0.6rem;
+    background-color: var(--dark-color);
+    opacity: 0.4;
+  }
+}

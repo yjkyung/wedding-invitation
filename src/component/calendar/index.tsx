@@ -1,12 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
-import {
-  BRIDE_FIRSTNAME,
-  GROOM_FIRSTNAME,
-  HOLIDAYS,
-  WEDDING_DATE,
-  WEDDING_DATE_FORMAT,
-} from "../../const"
+import { formatWeddingDate, HOLIDAYS, LOCALIZED, WEDDING_DATE } from "../../const"
 import { LazyDiv } from "../lazyDiv"
+import { useTranslation } from "../../language"
 
 // 해당 월의 첫 번째 날의 요일과 총 일수를 계산합니다.
 const firstDayOfWeek = WEDDING_DATE.startOf("month").day()
@@ -18,6 +13,9 @@ const daysInMonth = WEDDING_DATE.daysInMonth()
  * @returns {JSX.Element} 달력 및 카운트다운 섹션
  */
 export const Calendar = () => {
+  const { t, language } = useTranslation()
+  const { groomFirstname, brideFirstname } = LOCALIZED[language]
+
   // 현재 시간과 예식 시간의 차이를 관리합니다.
   const [tsDiff, setTsDiff] = useState(WEDDING_DATE.diff())
 
@@ -58,7 +56,7 @@ export const Calendar = () => {
       <h2 className="english">The Wedding Day</h2>
       <div className="break" />
       {/* 예식 일시 표시 */}
-      {WEDDING_DATE.format(WEDDING_DATE_FORMAT)}
+      {formatWeddingDate(language)}
 
       {/* 달력 영역 */}
       <div className="calendar-wrapper">
@@ -138,18 +136,15 @@ export const Calendar = () => {
           <div className="count">{diffs.seconds}</div>
         </div>
         <div className="message">
-          {GROOM_FIRSTNAME} & {BRIDE_FIRSTNAME}의 결혼식이{" "}
-          {dayDiff > 0 ? (
-            <>
-              <span className="d-day">{dayDiff}</span>일 남았습니다.
-            </>
-          ) : dayDiff === 0 ? (
-            <>오늘입니다.</>
-          ) : (
-            <>
-              <span className="d-day">{-dayDiff}</span>일 지났습니다.
-            </>
-          )}
+          {dayDiff > 0
+            ? t.calendar.countdownBefore(groomFirstname, brideFirstname, dayDiff)
+            : dayDiff === 0
+              ? t.calendar.countdownToday(groomFirstname, brideFirstname)
+              : t.calendar.countdownAfter(
+                  groomFirstname,
+                  brideFirstname,
+                  -dayDiff,
+                )}
         </div>
       </div>
     </LazyDiv>

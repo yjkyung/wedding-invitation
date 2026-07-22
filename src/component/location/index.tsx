@@ -2,7 +2,8 @@ import { Map } from "./map"
 import CarIcon from "../../icons/car-icon.svg?react"
 import BusIcon from "../../icons/bus-icon.svg?react"
 import { LazyDiv } from "../lazyDiv"
-import { LOCATION, LOCATION_ADDRESS } from "../../const"
+import { LOCALIZED } from "../../const"
+import { useTranslation } from "../../language"
 
 /**
  * 오시는 길 정보를 표시하는 컴포넌트입니다.
@@ -11,14 +12,17 @@ import { LOCATION, LOCATION_ADDRESS } from "../../const"
  * @returns {JSX.Element} 오시는 길 섹션
  */
 export const Location = () => {
+  const { t, language } = useTranslation()
+  const { location, locationAddress } = LOCALIZED[language]
+
   return (
     <>
       {/* 지도 및 주소 섹션 */}
       <LazyDiv className="card location">
         <h2 className="english">Location</h2>
         <div className="addr">
-          {LOCATION}
-          <div className="detail">{LOCATION_ADDRESS}</div>
+          {location}
+          <div className="detail">{locationAddress}</div>
         </div>
         <Map />
       </LazyDiv>
@@ -30,39 +34,13 @@ export const Location = () => {
           <div className="transportation-icon-wrapper">
             <BusIcon className="transportation-icon" />
           </div>
-          <div className="heading">대중교통</div>
+          <div className="heading">{t.location.transitHeading}</div>
           <div />
-          <div className="content">
-            * 지하철 이용 시
-            <br />
-            수인분당선 <b>수원시청역 10번 출구</b>
-            <br />
-            도보 2분 거리
-          </div>
+          <div className="content">{t.location.transitContent}</div>
           <div />
-          <div className="content">
-            * 시내버스
-            <br />
-            <b>13-1, 92-1</b> → 수원시청역 9번출구, 국민연금공단 하차
-            <br />
-            <b>51</b> → 수원시청역 1번출구, 경인일보 하차
-            <br />
-            <b>80, 81</b> → 수원시청역 1번출구, 경인일보 하차
-          </div>
+          <div className="content">{t.location.busContent}</div>
           <div />
-          <div className="content">
-            * 시외버스
-            <br />
-            강남역·양재역 → <b>3007번</b> (매탄1동주민센터 하차 후 81번 환승)
-            <br />
-            강남역·양재역 → <b>3002번</b> (수원시청역 8번출구 하차)
-            <br />
-            사당역 → <b>7000·7001번</b> (법원사거리 하차 후 81번 환승)
-            <br />
-            잠실역 → <b>M5342</b> (망포역 하차 후 61번 환승)
-            <br />
-            서현역 → <b>4000번</b> (수원시청역 8번출구 하차)
-          </div>
+          <div className="content">{t.location.intercityBusContent}</div>
         </div>
 
         {/* 자가용 안내 */}
@@ -70,17 +48,9 @@ export const Location = () => {
           <div className="transportation-icon-wrapper">
             <CarIcon className="transportation-icon" />
           </div>
-          <div className="heading">자가용</div>
+          <div className="heading">{t.location.carHeading}</div>
           <div />
-          <div className="content">
-            네이버 지도, 카카오 네비, 티맵 등 이용
-            <br />
-            <b>파티움하우스 수원</b> 검색
-            <br />
-            <b>- 웨딩홀 입구에서 주차요원 안내를 받고 이동하시기 바랍니다.</b> <br />
-            <b>- 농협, 경인일보, 파비오더씨타, 경기아트센터</b> <br />
-            <b>- 2시간 무료 주차 가능</b> <br />
-          </div>
+          <div className="content">{t.location.carContent}</div>
         </div>
       </LazyDiv>
     </>

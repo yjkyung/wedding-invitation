@@ -5,21 +5,19 @@ import { Button } from "../button"
 import { LazyDiv } from "../lazyDiv"
 import { Modal } from "../modal"
 import { AttendanceInfo } from "./attendance"
+import { useTranslation } from "../../language"
 
 /**
  * 식사 정보 안내 컴포넌트입니다.
  */
 export const Information1 = () => {
+  const { t } = useTranslation()
   return (
     <>
       <h2 className="english">Information</h2>
       <div className="info-card">
-        <div className="label">식사 안내</div>
-        <div className="content">
-          식사시간: 11시 40분 ~ 14시 10분
-          <br />
-          장소: 5층 연회장
-        </div>
+        <div className="label">{t.information.mealHeading}</div>
+        <div className="content">{t.information.mealContent}</div>
       </div>
     </>
   )
@@ -32,18 +30,13 @@ export const Information1 = () => {
 export const Information2 = () => {
   const donationModalState = useState(false)
   const [isGroom, setIsGroom] = useState(true)
+  const { t } = useTranslation()
 
   return (
     <>
       <div className="info-card">
-        <div className="label">마음 전하기</div>
-        <div className="content">
-          참석이 어려워 직접 축하해주지 못하는
-          <br />
-          분들을 위해 계좌번호를 기재하였습니다.
-          <br />
-          넓은 마음으로 양해 부탁드립니다.
-        </div>
+        <div className="label">{t.information.donationHeading}</div>
+        <div className="content">{t.information.donationContent}</div>
 
         <div className="break" />
 
@@ -54,7 +47,7 @@ export const Information2 = () => {
             setIsGroom(true)
           }}
         >
-          신랑측 계좌번호 보기
+          {t.information.viewGroomAccount}
         </Button>
         <div className="break" />
         <Button
@@ -64,7 +57,7 @@ export const Information2 = () => {
             setIsGroom(false)
           }}
         >
-          신부측 계좌번호 보기
+          {t.information.viewBrideAccount}
         </Button>
       </div>
 
@@ -76,17 +69,22 @@ export const Information2 = () => {
       >
         <div className="header">
           <div className="title">
-            {isGroom ? "신랑측 계좌번호" : "신부측 계좌번호"}
+            {isGroom
+              ? t.information.groomAccountTitle
+              : t.information.brideAccountTitle}
           </div>
         </div>
         <div className="content">
           {(isGroom ? GROOM_INFO : BRIDE_INFO)
             .filter(({ account }) => !!account)
-            .map(({ relation, name, account }) => (
-              <div className="account-info" key={relation}>
+            .map(({ relationKey, name, account }) => (
+              <div className="account-info" key={relationKey}>
                 <div>
                   <div className="name">
-                    <span className="relation">{relation}</span> {name}
+                    <span className="relation">
+                      {t.common.relation[relationKey]}
+                    </span>{" "}
+                    {name}
                   </div>
                   <div>{account}</div>
                 </div>
@@ -97,14 +95,14 @@ export const Information2 = () => {
                       try {
                         // 계좌번호 복사 기능
                         await navigator.clipboard.writeText(account)
-                        alert(account + "\n복사되었습니다.")
+                        alert(t.information.copiedAlert(account))
                       } catch {
-                        alert("복사에 실패했습니다.")
+                        alert(t.information.copyFailedAlert)
                       }
                     }
                   }}
                 >
-                  복사하기
+                  {t.information.copy}
                 </Button>
               </div>
             ))}
@@ -115,7 +113,7 @@ export const Information2 = () => {
             className="bg-light-grey-color text-dark-color"
             onClick={() => donationModalState[1](false)}
           >
-            닫기
+            {t.common.close}
           </Button>
         </div>
       </Modal>

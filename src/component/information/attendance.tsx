@@ -1,11 +1,4 @@
-import {
-  BRIDE_FULLNAME,
-  dayjs,
-  GROOM_FULLNAME,
-  LOCATION,
-  WEDDING_DATE,
-  WEDDING_DATE_FORMAT,
-} from "../../const"
+import { dayjs, formatWeddingDate, LOCALIZED, WEDDING_DATE } from "../../const"
 import { Button } from "../button"
 import { Modal } from "../modal"
 import { useEffect, useRef, useState } from "react"
@@ -13,6 +6,7 @@ import HeartIcon from "../../icons/heart-icon.svg?react"
 import CalendarIcon from "../../icons/calendar-icon.svg?react"
 import MarkerIcon from "../../icons/marker-icon.svg?react"
 import { SERVER_URL } from "../../env"
+import { useTranslation } from "../../language"
 
 /**
  * 입력 데이터 제한 규칙
@@ -35,6 +29,8 @@ const RULES = {
 export const AttendanceInfo = () => {
   const attendanceInfoModalState = useState(false)
   const attendanceFormModalState = useState(false)
+  const { t, language } = useTranslation()
+  const { groomFullname, brideFullname, location } = LOCALIZED[language]
 
   const initialized = useRef(false)
   const now = useRef(dayjs())
@@ -55,12 +51,8 @@ export const AttendanceInfo = () => {
   return (
     <>
       <div className="info-card">
-        <div className="label">참석 의사 전달</div>
-        <div className="content">
-          신랑, 신부에게 참석의사를
-          <br />
-          미리 전달할 수 있어요.
-        </div>
+        <div className="label">{t.attendance.heading}</div>
+        <div className="content">{t.attendance.content}</div>
 
         <div className="break" />
 
@@ -70,7 +62,7 @@ export const AttendanceInfo = () => {
             attendanceFormModalState[1](true)
           }}
         >
-          참석 의사 전달하기
+          {t.attendance.sendButton}
         </Button>
       </div>
 
@@ -81,26 +73,17 @@ export const AttendanceInfo = () => {
         closeOnClickBackground={true}
       >
         <div className="header">
-          <div className="title">참석 의사 전달 안내</div>
+          <div className="title">{t.attendance.infoModalTitle}</div>
         </div>
         <div className="content">
-          <div className="info-message">
-            축하의 마음으로 참석해주시는
-            <br />
-            모든 분들을 귀하게 모실 수 있도록
-            <br />
-            참석 및 식사 여부를 미리 여쭙고자 합니다.
-            <div className="break" />
-            부담없이 알려주시면
-            <br />
-            정성껏 준비하겠습니다.
-          </div>
+          <div className="info-message">{t.attendance.infoMessage}</div>
           <div className="wedding-info">
-            <HeartIcon /> 신랑 {GROOM_FULLNAME} & 신부 {BRIDE_FULLNAME}
+            <HeartIcon />{" "}
+            {t.attendance.weddingInfoLine(groomFullname, brideFullname)}
             <br />
-            <CalendarIcon /> {WEDDING_DATE.format(WEDDING_DATE_FORMAT)}
+            <CalendarIcon /> {formatWeddingDate(language)}
             <br />
-            <MarkerIcon /> {LOCATION}
+            <MarkerIcon /> {location}
           </div>
         </div>
         <div className="footer">
@@ -111,7 +94,7 @@ export const AttendanceInfo = () => {
               attendanceFormModalState[1](true)
             }}
           >
-            참석 의사 전달하기
+            {t.attendance.sendButton}
           </Button>
           <Button
             buttonStyle="style2"
@@ -120,7 +103,7 @@ export const AttendanceInfo = () => {
               attendanceInfoModalState[1](false)
             }}
           >
-            닫기
+            {t.common.close}
           </Button>
         </div>
       </Modal>
@@ -159,6 +142,7 @@ const AttendanceFormModal = ({ onClose }: { onClose: () => void }) => {
     count: HTMLInputElement
   }>
   const [loading, setLoading] = useState(false)
+  const { t } = useTranslation()
 
   return (
     <form
@@ -184,27 +168,27 @@ const AttendanceFormModal = ({ onClose }: { onClose: () => void }) => {
 
           // 유효성 검사
           if (!side) {
-            alert("신랑 또는 신부를 선택해주세요.")
+            alert(t.attendance.selectSideAlert)
             return
           }
           if (!name) {
-            alert("성함을 입력해주세요.")
+            alert(t.attendance.enterNameAlert)
             return
           }
           if (name.length > RULES.name.maxLength) {
-            alert(`성함을 ${RULES.name.maxLength}자 이하로 입력해주세요.`)
+            alert(t.attendance.nameTooLongAlert(RULES.name.maxLength))
             return
           }
           if (!meal) {
-            alert("식사 여부를 선택해주세요.")
+            alert(t.attendance.selectMealAlert)
             return
           }
           if (isNaN(count)) {
-            alert("참석 인원을 입력해주세요.")
+            alert(t.attendance.enterCountAlert)
             return
           }
           if (count < RULES.count.min) {
-            alert(`참석 인원을 ${RULES.count.min}명 이상으로 입력해주세요.`)
+            alert(t.attendance.countTooLowAlert(RULES.count.min))
             return
           }
 
@@ -220,21 +204,21 @@ const AttendanceFormModal = ({ onClose }: { onClose: () => void }) => {
             throw new Error(res.statusText)
           }
 
-          alert("참석 의사가 성공적으로 전달되었습니다.")
+          alert(t.attendance.submitSuccessAlert)
           onClose()
         } catch {
-          alert("참석 의사 전달에 실패했습니다.")
+          alert(t.attendance.submitFailedAlert)
         } finally {
           setLoading(false)
         }
       }}
     >
       <div className="header">
-        <div className="title">참석 의사 전달하기</div>
+        <div className="title">{t.attendance.formTitle}</div>
       </div>
       <div className="content">
         <div className="input-group">
-          <div className="label">구분</div>
+          <div className="label">{t.attendance.sideLabel}</div>
           <div className="select-input">
             <label>
               <input
@@ -248,7 +232,7 @@ const AttendanceFormModal = ({ onClose }: { onClose: () => void }) => {
                   inputRef.current.side.groom = ref as HTMLInputElement
                 }}
               />
-              <span>신랑</span>
+              <span>{t.common.relation.groom}</span>
             </label>
 
             <label>
@@ -262,18 +246,18 @@ const AttendanceFormModal = ({ onClose }: { onClose: () => void }) => {
                   inputRef.current.side.bride = ref as HTMLInputElement
                 }}
               />
-              <span>신부</span>
+              <span>{t.common.relation.bride}</span>
             </label>
           </div>
         </div>
 
         <div className="input-group">
-          <div className="label">성함</div>
+          <div className="label">{t.attendance.nameLabel}</div>
           <div className="input">
             <input
               disabled={loading}
               type="text"
-              placeholder="참석자 성함을 입력해주세요."
+              placeholder={t.attendance.namePlaceholder}
               maxLength={RULES.name.maxLength}
               ref={(ref) => {
                 inputRef.current.name = ref as HTMLInputElement
@@ -283,7 +267,7 @@ const AttendanceFormModal = ({ onClose }: { onClose: () => void }) => {
         </div>
 
         <div className="input-group">
-          <div className="label">식사</div>
+          <div className="label">{t.attendance.mealLabel}</div>
           <div className="radio-input">
             <label>
               <input
@@ -295,7 +279,7 @@ const AttendanceFormModal = ({ onClose }: { onClose: () => void }) => {
                   inputRef.current.meal.yes = ref as HTMLInputElement
                 }}
               />
-              <span>예정</span>
+              <span>{t.attendance.mealYes}</span>
             </label>
 
             <label>
@@ -308,7 +292,7 @@ const AttendanceFormModal = ({ onClose }: { onClose: () => void }) => {
                   inputRef.current.meal.undecided = ref as HTMLInputElement
                 }}
               />
-              <span>미정</span>
+              <span>{t.attendance.mealUndecided}</span>
             </label>
 
             <label>
@@ -321,13 +305,13 @@ const AttendanceFormModal = ({ onClose }: { onClose: () => void }) => {
                   inputRef.current.meal.no = ref as HTMLInputElement
                 }}
               />
-              <span>불참</span>
+              <span>{t.attendance.mealNo}</span>
             </label>
           </div>
         </div>
 
         <div className="input-group">
-          <div className="label">참석 인원 (본인 포함)</div>
+          <div className="label">{t.attendance.countLabel}</div>
           <div>
             <input
               disabled={loading}
@@ -338,13 +322,13 @@ const AttendanceFormModal = ({ onClose }: { onClose: () => void }) => {
                 inputRef.current.count = ref as HTMLInputElement
               }}
             />
-            명
+            {t.attendance.countUnit}
           </div>
         </div>
       </div>
       <div className="footer">
         <Button buttonStyle="style2" disabled={loading} type="submit">
-          전달하기
+          {t.attendance.submit}
         </Button>
         <Button
           buttonStyle="style2"
@@ -352,7 +336,7 @@ const AttendanceFormModal = ({ onClose }: { onClose: () => void }) => {
           className="bg-light-grey-color text-dark-color"
           onClick={onClose}
         >
-          닫기
+          {t.common.close}
         </Button>
       </div>
     </form>

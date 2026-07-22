@@ -4,6 +4,7 @@ import { LazyDiv } from "../lazyDiv"
 import { Button } from "../button"
 import { Modal } from "../modal"
 import { GALLERY_IMAGES } from "../../images"
+import { useTranslation } from "../../language"
 
 /**
  * 캐러셀 아이템 요소 생성
@@ -48,6 +49,7 @@ type ClickMove = "left" | "right" | null
  * @returns {JSX.Element} 갤러리 섹션
  */
 export const Gallery = () => {
+  const { t } = useTranslation()
   const modalState = useState(false)
   const carouselRef = useRef<HTMLDivElement>({} as HTMLDivElement)
 
@@ -396,7 +398,7 @@ export const Gallery = () => {
 
         <div className="break" />
 
-        <Button onClick={() => modalState[1](true)}>사진 전체보기</Button>
+        <Button onClick={() => modalState[1](true)}>{t.gallery.viewAll}</Button>
       </LazyDiv>
 
       {/* 사진 전체보기 모달 */}
@@ -406,7 +408,7 @@ export const Gallery = () => {
         closeOnClickBackground={true}
       >
         <div className="header">
-          <div className="title">사진 전체보기</div>
+          <div className="title">{t.gallery.viewAll}</div>
         </div>
 
         <div className="content">
@@ -436,7 +438,7 @@ export const Gallery = () => {
             className="bg-light-grey-color text-dark-color"
             onClick={() => modalState[1](false)}
           >
-            닫기
+            {t.common.close}
           </Button>
         </div>
       </Modal>

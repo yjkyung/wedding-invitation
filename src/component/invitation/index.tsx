@@ -1,15 +1,12 @@
 import { Fragment } from "react/jsx-runtime"
 import {
-  BRIDE_FULLNAME,
   BRIDE_INFO,
   BRIDE_FATHER,
   BRIDE_MOTHER,
-  GROOM_FULLNAME,
   GROOM_INFO,
   GROOM_FATHER,
   GROOM_MOTHER,
-  GROOM_TITLE,
-  BRIDE_TITLE,
+  LOCALIZED,
 } from "../../const"
 import { Modal } from "../modal"
 import { Button } from "../button"
@@ -17,6 +14,7 @@ import { LazyDiv } from "../lazyDiv"
 import PhoneIcon from "../../icons/phone-flip-icon.svg?react"
 import EnvelopeIcon from "../../icons/envelope-icon.svg?react"
 import { useState } from "react"
+import { useTranslation } from "../../language"
 
 /**
  * 초대 메시지와 혼주 정보, 연락하기 기능을 제공하는 컴포넌트입니다.
@@ -25,6 +23,14 @@ import { useState } from "react"
  */
 export const Invitation = () => {
   const contactModalState = useState(false)
+  const { t, language } = useTranslation()
+  const {
+    groomFullname,
+    groomTitle,
+    brideFullname,
+    brideTitle,
+  } = LOCALIZED[language]
+
   return (
     <>
       <LazyDiv className="card invitation">
@@ -33,34 +39,65 @@ export const Invitation = () => {
         <div className="break" />
 
         {/* 초대 문구 */}
-        <div className="content">함께하는 모든 계절이 </div>
-        <div className="content">특별해지는 사람을 만났습니다.</div>
-        {/* <div className="content"></div> */}
+        {t.invitation.greetingPart1.map((line) => (
+          <div className="content" key={line}>
+            {line}
+          </div>
+        ))}
         <div className="break" />
-        <div className="content">뜨거운 여름을 지나 결실의 계절로 향하는 9월</div>
-        <div className="content">저희 두 사람이 부부라는 이름으로 </div>
-        <div className="content">새로운 시작을 하려합니다.</div>
+        {t.invitation.greetingPart2.map((line) => (
+          <div className="content" key={line}>
+            {line}
+          </div>
+        ))}
         <div className="break" />
-        <div className="content">이 기쁨을 함께 나누고</div>
-        <div className="content">저희의 앞날을 축복해 주세요.</div>
+        {t.invitation.greetingPart3.map((line) => (
+          <div className="content" key={line}>
+            {line}
+          </div>
+        ))}
 
         <div className="break" />
 
         {/* 혼주 및 신랑 정보 */}
         <div className="name">
-          {GROOM_FATHER} · {GROOM_MOTHER}
-          <span className="relation">
-            의 <span className="relation-name">{GROOM_TITLE}</span>
-          </span>{" "}
-          {GROOM_FULLNAME}
+          {language === "ko" ? (
+            <>
+              {GROOM_FATHER} · {GROOM_MOTHER}
+              <span className="relation">
+                의 <span className="relation-name">{groomTitle}</span>
+              </span>{" "}
+              {groomFullname}
+            </>
+          ) : (
+            <>
+              {groomFullname}
+              <span className="relation">
+                , <span className="relation-name">{groomTitle}</span> of
+              </span>{" "}
+              {GROOM_FATHER} · {GROOM_MOTHER}
+            </>
+          )}
         </div>
         {/* 혼주 및 신부 정보 */}
         <div className="name">
-          {BRIDE_FATHER} · {BRIDE_MOTHER}
-          <span className="relation">
-            의 <span className="relation-name">{BRIDE_TITLE}</span>
-          </span>{" "}
-          {BRIDE_FULLNAME}
+          {language === "ko" ? (
+            <>
+              {BRIDE_FATHER} · {BRIDE_MOTHER}
+              <span className="relation">
+                의 <span className="relation-name">{brideTitle}</span>
+              </span>{" "}
+              {brideFullname}
+            </>
+          ) : (
+            <>
+              {brideFullname}
+              <span className="relation">
+                , <span className="relation-name">{brideTitle}</span> of
+              </span>{" "}
+              {BRIDE_FATHER} · {BRIDE_MOTHER}
+            </>
+          )}
         </div>
 
         <div className="break" />
@@ -70,7 +107,7 @@ export const Invitation = () => {
             contactModalState[1](true)
           }}
         >
-          연락하기
+          {t.invitation.contactButton}
         </Button>
       </LazyDiv>
 
@@ -82,10 +119,8 @@ export const Invitation = () => {
       >
         <div className="header">
           <div className="title-group">
-            <div className="title">축하 인사 전하기</div>
-            <div className="subtitle">
-              전화, 문자메세지로 축하 인사를 전해보세요.
-            </div>
+            <div className="title">{t.invitation.contactModalTitle}</div>
+            <div className="subtitle">{t.invitation.contactModalSubtitle}</div>
           </div>
         </div>
 
@@ -93,9 +128,11 @@ export const Invitation = () => {
           {/* 신랑측 연락처 */}
           <div className="contact-info">
             {GROOM_INFO.filter(({ phone }) => !!phone).map(
-              ({ relation, name, phone }) => (
-                <Fragment key={relation}>
-                  <div className="relation">{relation}</div>
+              ({ relationKey, name, phone }) => (
+                <Fragment key={relationKey}>
+                  <div className="relation">
+                    {t.common.relation[relationKey]}
+                  </div>
                   <div>{name}</div>
                   <div>
                     {/* 전화 걸기 */}
@@ -120,9 +157,11 @@ export const Invitation = () => {
           {/* 신부측 연락처 */}
           <div className="contact-info">
             {BRIDE_INFO.filter(({ phone }) => !!phone).map(
-              ({ relation, name, phone }) => (
-                <Fragment key={relation}>
-                  <div className="relation">{relation}</div>
+              ({ relationKey, name, phone }) => (
+                <Fragment key={relationKey}>
+                  <div className="relation">
+                    {t.common.relation[relationKey]}
+                  </div>
                   <div>{name}</div>
                   <div>
                     <PhoneIcon
@@ -149,7 +188,7 @@ export const Invitation = () => {
             className="bg-light-grey-color text-dark-color"
             onClick={() => contactModalState[1](false)}
           >
-            닫기
+            {t.common.close}
           </Button>
         </div>
       </Modal>
