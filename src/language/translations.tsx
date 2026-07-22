@@ -322,7 +322,7 @@ export const translations = {
       mobileOnlyAlert: "This is only available on mobile devices.",
     },
     information: {
-      mealHeading: "Meal Information",
+      mealHeading: "Meal Info",
       mealContent: (
         <>
           Time: 11:40 AM – 2:10 PM
