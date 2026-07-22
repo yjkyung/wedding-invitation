@@ -218,13 +218,14 @@ export const Gallery = () => {
       const status = statusRef.current
 
       if (status === "clicked") {
-        e.preventDefault()
         const xMove =
           e.targetTouches[0].clientX - dragOptionRef.current.startingClientX
         const yMove =
           e.targetTouches[0].clientY - dragOptionRef.current.startingClientY
-        // 일정 거리 이상 움직였을 때만 드래그로 간주
+        // 가로 방향으로 확정된 경우에만 preventDefault로 페이지 스크롤을 막습니다.
+        // (미리 막으면 세로 스크롤 의도였을 때도 페이지가 잠겨버립니다)
         if (Math.abs(xMove) > DRAG_SENSITIVITY) {
+          e.preventDefault()
           setStatus("dragging")
         } else if (Math.abs(yMove) > DRAG_SENSITIVITY) {
           setStatus("clickCanceled")
