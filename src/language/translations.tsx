@@ -114,7 +114,7 @@ export const translations = {
         <>
           식사시간: 11시 40분 ~ 14시 10분
           <br />
-          장소: 5층 연회장
+          {/* 장소: 5층 연회장 */}
         </>
       ),
       donationHeading: "마음 전하기",
@@ -327,7 +327,7 @@ export const translations = {
         <>
           Time: 11:40 AM – 2:10 PM
           <br />
-          Venue: 5F Banquet Hall
+          {/* Venue: 5F Banquet Hall */}
         </>
       ),
       donationHeading: "Wedding Gift",
